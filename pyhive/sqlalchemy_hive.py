@@ -153,6 +153,13 @@ class HiveCompiler(SQLCompiler):
         #   INSERT INTO TABLE `pyhive_test_database`.`test_table` SELECT ...
         regex = r'^(INSERT INTO) ([^\s]+) \([^\)]*\)'
         assert re.search(regex, result), "Unexpected visit_insert result: {}".format(result)
+
+        compiled_sql = re.sub(regex, r'\1 TABLE \2', result)
+        old_sql = compiled_sql.split(" ", maxsplit=4)[:4]
+        old_sql = " ".join(old_sql)
+        new_sql = old_sql + " PARTITION (date_)"
+        compiled_sql = compiled_sql.replace(old_sql, new_sql)
+
         return re.sub(regex, r'\1 TABLE \2', result)
 
     def visit_column(self, *args, **kwargs):
