@@ -160,7 +160,7 @@ class HiveCompiler(SQLCompiler):
         new_sql = old_sql + " PARTITION (date_)"
         compiled_sql = compiled_sql.replace(old_sql, new_sql)
 
-        return re.sub(regex, r'\1 TABLE \2', result)
+        return compiled_sql
 
     def visit_column(self, *args, **kwargs):
         result = super(HiveCompiler, self).visit_column(*args, **kwargs)
